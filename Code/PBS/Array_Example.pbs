@@ -1,9 +1,10 @@
 #!/bin/bash 
-#PBS -N Run_SKIRT
+#PBS -N Serial_Example
 #PBS -o /home/connor.bottrell/Scratch/pbs
 #PBS -e /home/connor.bottrell/Scratch/pbs
-#PBS -l select=1:ncpus=1:mem=4gb
+#PBS -l select=1:ncpus=1:mem=32mb
 #PBS -l walltime=00:30:00
+#PBS -J 0-256:1
 #PBS -u bottrell
 #PBS -M connor.bottrell@ipmu.jp
 #PBS -m ae
@@ -13,7 +14,7 @@
 # activate Python 3
 source /home/anaconda3/bin/activate
 # you can set environment variables in the job script
-export WORKDIR=$HOME/Demos/HPC_IPMU/Code/Serial
-cd $WORKDIR
+export HPC_DIR=$HOME/Demos/HPC_IPMU
+cd $HPC_DIR/Code/Array
 # run program
-python Serial_Example.py
+python Array_Example.py $PBS_ARRAY_INDEX
