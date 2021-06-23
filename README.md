@@ -78,3 +78,14 @@ The same principle applies to job scripts in batch mode. In your job script, sim
     conda activate tf39_cpu
     python my_program.py
     
+# Where to work on iDark
+
+The `/home` file system has very limited space and may rapidly get congested if too many users are working and storing files there. As with previous clusters, iDark has a designated file system for work:
+
+    /lustre/work/username
+    
+The snag is that the output files from job scripts will not save to this file system -- could be quite inconvenient. I have raised this issue with IT. For now, you should create a directory in the `/home` file system (e.g. `/home/username/tmp/pbs/` where those files can be directed in the `#PBS -o` and `#PBS -e` lines of your job scripts.
+
+# Updates
+
+If you have any comments or suggestions for this goodie bag of tips and tricks, please send them my way with a description and I will consider adding them to the list.
