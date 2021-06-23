@@ -29,6 +29,19 @@ You can create your own environments with conda with any specified python versio
 
     conda create -n tf39_cpu python=3.9
 
-Once you have created the environment `tf39_cpu` (or a less boring name), you can view existing environments with `conda env list`. There, you will see the `base` environment and any other environments. 
+This command creates a new python environment called `tf39_cpu` which runs the latest stable version of Python 3.9. Once you have created the new environment, you can view it and all other existing environments (including `base`) with `conda env list`. You can activate any of these environments as follows:
 
+    conda activate tf39_cpu
+    
+Where you can replace `tf39_cpu` with the name of your environment. This installation will be fairly bare-bones. But you can now start installing packages. For example, the most recent `numpy` version can be installed using the `pip` version that is installed when you created your python environment. Type `which pip` and you will see that it is a specific pip installation for your python environment. Now install numpy:
+
+    pip install numpy
+
+`numpy` is one of many useful Python packages. Wouldn't it be nice if there is a stack of all the useful scientific packages so that you wouldn't have to install them all separately and think about dependencies? Oh yeah:
+
+    pip install scipy-stack
+    
+ For more documentation on conda, including more management options and deletion of environments, go to the conda docs here:
+ 
+    https://conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html
   
