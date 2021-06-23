@@ -88,4 +88,4 @@ The snag is that the output files from job scripts will not save to this file sy
 
 # Updates
 
-If you have any comments or suggestions for this goodie bag of tips and tricks, please send them my way with a description and I will consider adding them to the list.
+If you have any comments or suggestions for this goodie bag of tips and tricks, please send them my way (`connor.bottrell 'at' ipmu 'dot' jp`) with a description and I will consider adding them to the list.
