@@ -49,7 +49,7 @@ Where you can replace `tf39_cpu` with the name of your environment. This install
  
     https://conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html
   
-## Interactive jobs
+## Python in Interactive jobs
 
 An interactive job is useful for debugging. But all large jobs should be executed through the main queue for peak efficiency. You can submit an interactive job on any of the queues. Here is an example:
 
@@ -59,14 +59,14 @@ You can also copy/paste this into an executable shell script instead of memorizi
 
     conda activate tf39_cpu
     
-## Batch jobs
+## Python in Batch jobs
 
-The same principle applies to job scripts in batch mode. In your job script, simply activate the conda environment before execution of your program. For example:
+The same principle applies to job scripts in batch mode. In your job script, simply activate the conda environment before execution of your program. For example, after creating a path for your output and error files at /home/username/PBS, you could execute the following job script:
 
     #!/bin/bash 
     #PBS -N Demo
-    #PBS -o /home/connor.bottrell/Scratch/pbs
-    #PBS -e /home/connor.bottrell/Scratch/pbs
+    #PBS -o /home/username/PBS 
+    #PBS -e /home/username/PBS
     #PBS -l select=1:ncpus=1:mem=4gb
     #PBS -l walltime=0:0:30
     #PBS -u username
