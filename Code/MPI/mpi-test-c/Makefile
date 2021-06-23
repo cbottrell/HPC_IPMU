@@ -1,5 +1,5 @@
 EXECS=test
-MPICC?=mpicc
+MPICC=mpicc
 
 all: ${EXECS}
 

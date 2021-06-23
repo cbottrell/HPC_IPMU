@@ -6,7 +6,7 @@ from mpi4py import MPI
 comm = MPI.COMM_WORLD
 name = MPI.Get_processor_name()
 
-print("Hello world fromp processor {}, rank {} out of {} processors"\
+print("Hello world from processor {}, rank {} out of {} processors"\
 	.format(name, comm.rank, comm.size))
 
 print("Now I will take up memory and waste computing power for demonstration purposes")
