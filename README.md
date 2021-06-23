@@ -1,5 +1,5 @@
 # Kavli IPMU HPC documentation 
-Useful tips and tricks for high-performance computing using Kavli IPMU clusters (specifically idark, which uses the PBS Professional queue system).
+Useful tips and tricks for high-performance computing using Kavli IPMU clusters (specifically iDark).
 
 ## Python
 
@@ -21,7 +21,14 @@ and you will see that the version that has been activated is Python 3.8.5. Conda
 
     conda init
     
-w
+which will add the initialization script to your `~.bashrc` that is executed whenever you login to the cluster or allocate to a compute node. When you use `conda init`, the next time you login to the cluster you will see `(base)` next your credentials on the command line. This means that your `base` conda environment is active. You can turn off automatic activation of this environment by doing:
 
-The gw and gfarm clusters use older versions of python which may not be compatible with some of the Python programs in this documentation. However, once you are famililar with the concepts, they can be easily applied with older versions of Python. 
+    conda config --set auto_activate_base false
+    
+You can create your own environments with conda with any specified python version:
+
+    conda create -n tf39_cpu python=3.9
+
+Once you have created the environment `tf39_cpu` (or a less boring name), you can view existing environments with `conda env list`. There, you will see the `base` environment and any other environments. 
+
   
