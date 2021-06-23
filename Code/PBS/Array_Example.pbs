@@ -1,5 +1,5 @@
 #!/bin/bash 
-#PBS -N Serial_Example
+#PBS -N Array_Example
 #PBS -o /home/connor.bottrell/Scratch/pbs
 #PBS -e /home/connor.bottrell/Scratch/pbs
 #PBS -l select=1:ncpus=1:mem=32mb
