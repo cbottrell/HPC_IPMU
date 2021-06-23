@@ -15,7 +15,11 @@ if you have already done `conda init` (default for new accounts, check your ~/.b
 
     python
 
-and you will see that the version that has been activated is Python 3.8.5. Conda is a python environment manager. Suppose you start a new project and want to use all of the up-to-date versions of your favorite python modules -- but want to keep older versions available for compatibility with previous projects. This is the rationale of conda. With conda you can create python environments that you can activate anywhere on the cluster -- from the login node or compute nodes (either in interactive mode or directly inside your job scripts!). 
+and you will see that the version that has been activated is Python 3.8.5. 
+
+## Conda
+
+Conda is a python environment manager. Suppose you start a new project and want to use all of the up-to-date versions of your favorite python modules -- but want to keep older versions available for compatibility with previous projects. This is the rationale of conda. With conda you can create python environments that you can activate anywhere on the cluster -- from the login node or compute nodes (either in interactive mode or directly inside your job scripts!). 
 
 <p>If you have not yet used conda, start by writing:</p>
 
@@ -45,3 +49,32 @@ Where you can replace `tf39_cpu` with the name of your environment. This install
  
     https://conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html
   
+## Interactive jobs
+
+An interactive job is useful for debugging. But all large jobs should be executed through the main queue for peak efficiency. You can submit an interactive job on any of the queues. Here is an example:
+
+    qsub -l select=1:ncpus=1:mem=4gb -l walltime=3:0:0 -q tiny -I
+    
+You can also copy/paste this into an executable shell script instead of memorizing the syntax. This submission requests an allocation of 1 task with 1 CPU per task with 4GB of memory per task (i.e. 1 CPU on some node with at least 4GB of available memory). By executing, you will be put into the queue until the resources are available. Once you have been allocated to the resources, you can conduct your tests. Let's see if we can access our conda environment:
+
+    conda activate tf39_cpu
+    
+## Batch jobs
+
+The same principle applies to job scripts in batch mode. In your job script, simply activate the conda environment before execution of your program. For example:
+
+    #!/bin/bash 
+    #PBS -N Demo
+    #PBS -o /home/connor.bottrell/Scratch/pbs
+    #PBS -e /home/connor.bottrell/Scratch/pbs
+    #PBS -l select=1:ncpus=1:mem=4gb
+    #PBS -l walltime=0:0:30
+    #PBS -u username
+    #PBS -M username@ipmu.jp
+    #PBS -m ae
+    #PBS -q tiny
+
+    # activate conda environment
+    conda activate tf39_cpu
+    python my_program.py
+    
