@@ -37,7 +37,11 @@ This command creates a new python environment called `tf39_cpu` which runs the l
 
     conda activate tf39_cpu
     
-Where you can replace `tf39_cpu` with the name of your environment. This installation will be fairly bare-bones. But you can now start installing packages. For example, the most recent `numpy` version can be installed using the `pip` version that is installed when you created your python environment. Type `which pip` and you will see that it is a specific pip installation for your python environment. Now install numpy:
+Where you can replace `tf39_cpu` with the name of your environment. This installation will be fairly bare-bones. But you can now start installing packages. For example, to install numpy, you can do:
+    
+    conda install numpy
+    
+If a package you want is unavailable from conda, you can also use `pip` within a conda environment. Type `which pip` and you will see that it is a specific pip installation for your python environment. Note, however, that this can sometimes lead to conflicts; see [here](https://www.anaconda.com/blog/using-pip-in-a-conda-environment) for detals. To install numpy using pip, do:
 
     pip install numpy
 
