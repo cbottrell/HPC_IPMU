@@ -25,7 +25,7 @@ Conda is a python environment manager. Suppose you start a new project and want 
 
     conda init
     
-which will add the initialization script to your `~.bashrc` that is executed whenever you login to the cluster or allocate to a compute node. When you use `conda init`, the next time you login to the cluster you will see `(base)` next your credentials on the command line. This means that your `base` conda environment is active. You can turn off automatic activation of this environment by doing:
+which will add the initialization script to your `~/.bashrc` that is executed whenever you login to the cluster or allocate to a compute node. When you use `conda init`, the next time you login to the cluster you will see `(base)` next your credentials on the command line. This means that your `base` conda environment is active. You can turn off automatic activation of this environment by doing:
 
     conda config --set auto_activate_base false
     
