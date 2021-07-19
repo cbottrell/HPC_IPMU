@@ -96,4 +96,8 @@ If you have any comments or suggestions for this goodie bag of tips and tricks, 
 
 # Jupyter [notebook/lab]
 
-Jupyter notebook and jupyter lab are great interactive python working environments for streamlined code testing and file editing. For more info, check the jupyter website https://jupyter.org/.
+Jupyter notebook and jupyter lab are great interactive python working environments for streamlined code testing and file editing. For more info, check the jupyter website https://jupyter.org/. Jupyter can be installed with:
+
+    conda install jupyter
+
+By default, jupyter will open in the browser of whichever machine is running the session. However, you can tunnel into a jupyter session running on a remote machine from your laptop or work-station computer. 
