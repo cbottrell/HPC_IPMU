@@ -9,7 +9,7 @@ There are two main machines at IPMU:
 - `idark` is the main computer cluster.
 - `gpgpu` is a box with 8 GPUs.
 
-These machines are managed by IPMU's IT team, who can be reached at  `it 'at' ipmu 'dot' jp`. See the [internal webpage](https://www.ipmu.jp/en/employees-internal/computing) (ask the IT team for access) for technical details and specifications. 
+These machines are managed by IPMU's IT team, who can be reached at  `it 'at' ipmu 'dot' jp`. See the [internal webpage](https://www.ipmu.jp/en/employees-internal/computing) (ask the IT team for access) for technical details and specifications.
 
 The machines can only be accessed from within the campus intranet. To use them from home, ask the IT team for VPN connection information.
 
@@ -127,8 +127,10 @@ After restarting your terminal, pyenv should now be in your path and you can see
 ```
 and then install one using
 ```bash
-[username@idark ~]$ CPPFLAGS=-I/usr/include/openssl11 \
+[username@idark ~]$ 
+CPPFLAGS=-I/usr/include/openssl11 \
 LDFLAGS=-L/usr/lib64/openssl11 \
+PYTHON_CONFIGURE_OPTS="--enable-shared" \
 pyenv install -v 3.11.3 # or something different
 ```
 
@@ -138,7 +140,7 @@ The new version will now show up if you run `pyenv versions`, and you can set it
 [username@idark ~]$ pyenv global 3.11.3
 
 [username@idark ~]$ python --version
-# Python 3.11.1
+# Python 3.11.3
 
 [username@idark ~]$ which python
 # ~/.pyenv/shims/python
@@ -160,19 +162,46 @@ At which point you will see (project-venv) in the command prompt. If you now ins
 
 Anytime you want to run code on the cluster, you should do so in a job. There are a lot of different types of jobs.
 
-The basic pattern for a job in PBS (idark) is
+The basic pattern for a PBS job on idark is
 
 ```bash
-#!/bin/bash 
-#PBS -N demo # job name
-#PBS -o /home/username/PBS/  # (path for stdout)
-#PBS -e /home/username/PBS/  # (path for stderr)
+#!/bin/bash
+#PBS -N demo
+#PBS -o /home/username/PBS/
+#PBS -e /home/username/PBS/
 #PBS -l select=1:ncpus=1:mem=4gb
 #PBS -l walltime=0:0:30
 #PBS -u username
 #PBS -M username@ipmu.jp
-#PBS -m ae # (email notification when job (a)borts or (e)nds)
-#PBS -q tiny # which queue
+#PBS -m ae
+#PBS -q tiny
+
+# activate python environment
+source ~/.bashrc 
+conda activate tf39_cpu
+# for pyenv/virtualenv instead use
+# source /home/username/project/project-venv/bin/activate
+
+python my_program.py
+```
+
+For a  job on gpgpu, make sure to first run `nvidia-smi` and identify GPUs which are not being used. Then a typical slurm file looks like
+
+```
+#!/bin/bash
+#SBATCH --job-name=demo
+#SBATCH --account=username
+#SBATCH --output=/home/username/log/%j.out  
+#SBATCH --error=/home/username/log/%j.err  
+#SBATCH --time==0+00:01:00
+#SBATCH --gres=gpu:1
+#SBATCH --mem=32G
+#SBATCH --cpus-per-gpu=6
+#SBATCH --mail-user=username@ipmu.jp
+#SBATCH --mail-type=END,FAIL
+
+export CUDA_DEVICE_ORDER=PCI_BUS_ID
+export CUDA_VISIBLE_DEVICES=X # where X is the GPU id of an available GPU
 
 # activate python environment
 conda activate tf39_cpu
@@ -182,55 +211,37 @@ conda activate tf39_cpu
 python my_program.py
 ```
 
-## Python in Batch jobs
+Please use only one GPU at a time, to prevent congestion.
 
-The same principle applies to job scripts in batch mode. In your job script, simply activate the conda environment before execution of your program. For example, after creating a path for your output and error files at /home/username/PBS, you could execute the following job script:
+## Using Jupyter 
 
-### Assigning GPUs to a job
+Using jupyter is a great way to make working remotely a little easier and more seamless. On idark, I believe it is only possible to run jupyter on the login node. Run
 
-1. Run "nvidia-smi" and identify GPUs which are NOT used.
-2. Specify GPU you want use.
-   $ export CUDA_DEVICE_ORDER=PCI_BUS_ID
-   $ export CUDA_VISIBLE_DEVICES=X    # where X is GPU id
-3. Run your process.
+```bash
+jupyter lab --no-browser --ip=0.0.0.0 --port=X
+```
 
-### Using Jupyter lab
+where X is some port you choose, e.g 1337. Then on your local computer forward some local port Y to the remote port X using
 
-job script
+```bash
+$ ssh -NfL Y:localhost:X username@idark.ipmu.jp
+```
+Now opening your browser to localhost:Y will give you direct access to jupyter on the cluster. This same kind of port forwarding is used if you want to use MLFlow or tensorboard to track your ML experiments.
 
-ssh port forwarding
+On gpgpu, to give GPUs to your jupyter instance you should put the jupyter lab command in a job script.
 
-function gpubridge(){
-    if [ $# -eq 0 ]
-    then
-        localport=8000
-        clusterport=9000
-    else
-        localport=($1)
-        clusterport=($2)
-    fi
-    echo "$localport"
-    echo "$clusterport"
-    ssh -NfL ${localport}:localhost:${clusterport} passaglia@192.168.156.71
-}
+<!-- If you get an ssl error running jupyter lab, then either make sure you activate conda in your job script or if using pyenv find the missing libraries mentioned in the error message using `locate libssl.so.1.1`, copy library from the login node to a folder `/home/username/mylibs/`, and and then in your job script add the line `export LD_LIBRARY_PATH=/home/username/mylibs/:$LD_LIBRARY_PATH` .  -->
 
-TODO: connecting your venv to jupyter 
-jupytervenv:
-	source venv/bin/activate && \
-	pip install ipykernel && \
-	pip install jupyter && \
-	python -m ipykernel install --name venv-japandata --user
+To register a virtualenv in jupyter, run
+```bash
+source project-venv/bin/activate 
+python -m ipykernel install --name project-venv --user
+```
 
-<!-- ## Python in Interactive jobs
+## Connecting your IDE 
 
-An interactive job is useful for debugging. But all large jobs should be executed through the main queue for peak efficiency. You can submit an interactive job on any of the queues. Here is an example:
+Most IDEs you run on your local computer can be connected to the cluster to allow you to edit your files there seamlessly. For vscode, for example, follow the instructions [here](https://code.visualstudio.com/docs/remote/ssh).
 
-    qsub -l select=1:ncpus=1:mem=4gb -l walltime=3:0:0 -q tiny -I
-    
-You can also copy/paste this into an executable shell script instead of memorizing the syntax. This submission requests an allocation of 1 task with 1 CPU per task with 4GB of memory per task (i.e. 1 CPU on some node with at least 4GB of available memory). By executing, you will be put into the queue until the resources are available. Once you have been allocated to the resources, you can conduct your tests. Let's see if we can access our conda environment:
-
-    conda activate tf39_cpu -->
-    
 # Where to work on iDark
 
 The `/home` file system has very limited space and may rapidly get congested if too many users are working and storing files there. As with previous clusters, iDark has a designated file system for work:
