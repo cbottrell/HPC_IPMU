@@ -45,7 +45,7 @@ It's important to know that there is no central system to allocate the GPUs on g
 
 ## Setting up a Python environment
 
-Before running your own jobs or the examples in this repository, you may wish to set up your Python environment. Python 3 is already installed on the cluster, and there are two main ways to manage your python installation: `conda` and `pyenv`. You can choose whichever you prefer.
+Before running your own jobs, you may wish to set up your Python environment. Python 3 is already installed on the cluster, and there are two main approaches to managing your python installation: `conda` and `pyenv`. Choose whichever you prefer.
 
 ### Conda
 
