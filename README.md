@@ -28,19 +28,19 @@ Once you ssh onto the cluster, you'll want to see what everyone else is doing.
 The job manager on idark is PBS. To see what jobs are running, run
 
 ```bash
-    [username@idark ~]$ qstat
+[username@idark ~]$ qstat
 ```
 
 On gpgpu, the job manager is slurm. The equivalent command is
 
 ```bash
-    [username@gpgpu ~]$ squeue
+[username@gpgpu ~]$ squeue
 ```
 
 It's important to know that there is no central system to allocate the GPUs on gpgpu, so you need to check which are available using the command
 
 ```bash
-    [username@gpgpu ~]$ nvidia-smi
+[username@gpgpu ~]$ nvidia-smi
 ```
 
 ## Setting up a Python environment
@@ -53,7 +53,7 @@ Conda is a python package and environment manager. Suppose you start a new proje
 
 The first time you log on to the cluster, run
 ```bash
-    [username@idark ~]$ conda init
+[username@idark ~]$ conda init
 ```
 This will add an initialization script to your `~/.bashrc` that is executed whenever you login to the cluster or allocate to a compute node. The next time you login, you will see `(base)` next to your credentials on the command line, indicating that your `base` conda environment is active. When you run python,
 ```bash
@@ -90,14 +90,14 @@ replacing `tf39_cpu` with the name of your environment.
 
 The default installation will be fairly bare-bones, but you can now start installing packages. To install numpy, for example, you can do:
 ```bash
-    (tf39_cpu) [username@idark ~]$ conda install numpy
+(tf39_cpu) [username@idark ~]$ conda install numpy
 ```
 
 If a package you want is unavailable from the conda package manager, you can use `pip` within a conda environment instead. Type `which pip` and you will see that it is a specific pip installation for your python environment. Note, however, that this can sometimes lead to conflicts; see [here](https://www.anaconda.com/blog/using-pip-in-a-conda-environment) for details. 
 
 `numpy` is one of many useful Python packages. Wouldn't it be nice if there is a stack of all the useful scientific packages so that you wouldn't have to install them all separately and think about dependencies? Oh yeah:
 ```bash
-    (tf39_cpu) [username@idark ~]$ pip install scipy-stack
+(tf39_cpu) [username@idark ~]$ pip install scipy-stack
 ```
 
 Later, we will see how to use this python environment for jobs. For more documentation on conda, including more management options and deletion of environments, check out the [conda docs](https://conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html).
