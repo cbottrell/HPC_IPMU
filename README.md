@@ -13,12 +13,12 @@ These machines are managed by IPMU's IT team, who can be reached at  `it 'at' ip
 
 The machines can only be accessed from within the campus intranet. To use them from home, ask the IT team for VPN connection information.
 
-Then you will need an account on the machines you wish to access. Follow the IT team's instructions, which will involve sending them your ssh public key.
+You will need an account on the machines you wish to access. Follow the IT team's instructions, which will involve sending them your ssh public key.
 
 Once you're all set up you can connect to the servers with
 ```bash
-ssh [username]@idark.ipmu.jp # for idark
-ssh [username]@192.168.156.71 # for gpgpu
+$ ssh [username]@idark.ipmu.jp # for idark
+$ ssh [username]@192.168.156.71 # for gpgpu
 ```
 
 ## Seeing what's going on
@@ -28,19 +28,19 @@ Once you ssh onto the cluster, you'll want to see what everyone else is doing.
 The job manager on idark is PBS. To see what jobs are running, run
 
 ```bash
-qstat
+    [username@idark ~]$ qstat
 ```
 
 On gpgpu, the job manager is slurm. The equivalent command is
 
 ```bash
-squeue
+    [username@gpgpu ~]$ squeue
 ```
 
 It's important to know that there is no central system to allocate the GPUs on gpgpu, so you need to check which are available using the command
 
 ```bash
-nvidia-smi
+    [username@gpgpu ~]$ nvidia-smi
 ```
 
 ## Setting up a Python environment
@@ -57,21 +57,21 @@ The first time you log on to the cluster, run
 ```
 This will add an initialization script to your `~/.bashrc` that is executed whenever you login to the cluster or allocate to a compute node. The next time you login, you will see `(base)` next to your credentials on the command line, indicating that your `base` conda environment is active. When you run python,
 ```bash
-    (base) [username@idark ~]$ python
+(base) [username@idark ~]$ python
 ```
 and you will see that the version that has been activated is Python 3.8.10.
 
 If you prefer, you can always turn off automatic activation of the environment by doing:
 ```bash
-    [username@idark ~]$ conda config --set auto_activate_base false
+[username@idark ~]$ conda config --set auto_activate_base false
 ```
 and instead manually activate the environment using 
 ```bash
-    [username@idark ~]$ source /home/anaconda3/bin/activate
+[username@idark ~]$ source /home/anaconda3/bin/activate
 ```
 or
 ```bash
-    [username@idark ~]$ conda activate base
+[username@idark ~]$ conda activate base
 ```
 
 To deactivate a conda environment, just run `conda deactivate`.
@@ -79,12 +79,12 @@ To deactivate a conda environment, just run `conda deactivate`.
 You can also create your own environments with conda with any specified python version:
 
 ```bash
-    [username@idark ~]$ conda create -n tf39_cpu python=3.9
+[username@idark ~]$ conda create -n tf39_cpu python=3.9
 ```
 
 This command creates a new python environment called `tf39_cpu` which runs the latest stable version of Python 3.9. Once you have created the new environment, you can view it and all other existing environments (including `base`) with `conda env list`. You can activate any of these environments as follows:
 ```bash
-    [username@idark ~]$ conda activate tf39_cpu
+[username@idark ~]$ conda activate tf39_cpu
 ``` 
 replacing `tf39_cpu` with the name of your environment. 
 
