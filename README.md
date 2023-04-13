@@ -242,7 +242,7 @@ python -m ipykernel install --name project-venv --user
 
 Most IDEs you run on your local computer can be connected to the cluster to allow you to edit your files there seamlessly. For vscode, for example, follow the instructions [here](https://code.visualstudio.com/docs/remote/ssh).
 
-# Where to work on iDark
+# Where to work on idark
 
 The `/home` file system has very limited space and may rapidly get congested if too many users are working and storing files there. As with previous clusters, iDark has a designated file system for work:
 
