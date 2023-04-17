@@ -11,7 +11,7 @@
 #PBS -q tiny
 
 # activate Python 3
-source /home/anaconda3/bin/activate
+conda activate base
 # you can set environment variables in the job script
 export HPC_DIR=$HOME/Demos/HPC_IPMU
 cd $HPC_DIR/Code/Serial
