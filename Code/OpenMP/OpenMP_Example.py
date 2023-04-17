@@ -18,7 +18,8 @@ def main():
     # Main code 
     start = time.time()
     args = range(128)
-    nthreads = 16
+    nthreads = os.getenv('OMP_NUM_THREADS')
+    nthreads = int(nthreads)
     with Pool(nthreads) as pool:
         pool.map(serial_task,args)
     runtime = time.time()-start

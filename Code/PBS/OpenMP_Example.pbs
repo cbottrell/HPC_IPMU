@@ -1,5 +1,5 @@
 #!/bin/bash 
-#PBS -N Serial_Example
+#PBS -N OpenMP_Example
 #PBS -o /lustre/work/tutorial/scratch
 #PBS -e /lustre/work/tutorial/scratch
 #PBS -l select=1:ncpus=16:mem=4gb
@@ -13,6 +13,7 @@
 # activate Python 3
 source /home/anaconda3/bin/activate
 # you can set environment variables in the job script
+export OMP_NUM_THREADS=16
 export HPC_DIR=/lustre/work/tutorial/HPC_IPMU
 cd $HPC_DIR/Code/OpenMP
 # run program
