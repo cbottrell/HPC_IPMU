@@ -1,21 +1,23 @@
 # Example Serial Job
-import time
+import os,time
 
 # Serial task
 def serial_task(idx):
-    # Simulated task taking 5s and creating file
+    # Simulated task taking 5s
     time.sleep(5)
-    filename = f'../../Output/Serial/Serial.{idx}.txt'
+    base = os.getenv('HPC_DIR')
+    outdir = f'{base}/Output/Serial'
+    filename = f'{outdir}/Serial.{idx}.txt'
     with open(filename,'w') as f:
     	for i in range(idx+1):
     		f.write(f'{i**2}\n')
     return 
     
 def main():
-    # Main code 
+    # Main code
     start = time.time()
-    for i in range(256):
-    	serial_task(i)
+    for idx in range(128):
+    	serial_task(idx)
     runtime = time.time()-start
     print(f'Time: {runtime}s')
 	

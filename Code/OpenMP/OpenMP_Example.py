@@ -1,11 +1,14 @@
 # Example Parellel OpenMP Job
-import time
+import os,time
 from multiprocessing import Pool
 
 # Serial task 
 def serial_task(idx):
-    time.sleep(0.5)
-    filename = f'../../Output/OpenMP/OpenMP.{idx}.txt'
+    # Simulated task taking 5s
+    time.sleep(5)
+    base = os.getenv('HPC_DIR')
+    outdir = f'{base}/Output/OpenMP'
+    filename = f'{outdir}/OpenMP.{idx}.txt'
     with open(filename,'w') as f:
         for i in range(idx+1):
             f.write(f'{i**2}\n')
@@ -14,8 +17,8 @@ def serial_task(idx):
 def main():
     # Main code 
     start = time.time()
-    args = range(16)
-    nthreads = 8
+    args = range(128)
+    nthreads = 16
     with Pool(nthreads) as pool:
         pool.map(serial_task,args)
     runtime = time.time()-start

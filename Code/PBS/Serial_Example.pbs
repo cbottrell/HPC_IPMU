@@ -1,19 +1,19 @@
 #!/bin/bash 
 #PBS -N Serial_Example
-#PBS -o /home/connor.bottrell/Scratch/pbs
-#PBS -e /home/connor.bottrell/Scratch/pbs
+#PBS -o /lustre/work/tutorial/scratch
+#PBS -e /lustre/work/tutorial/scratch
 #PBS -l select=1:ncpus=1:mem=4gb
 #PBS -l walltime=00:30:00
-#PBS -u bottrell
+#PBS -u tutorial
 #PBS -M connor.bottrell@ipmu.jp
 #PBS -m ae
 #PBS -V
 #PBS -q tiny
 
 # activate Python 3
-conda activate base
+source /home/anaconda3/bin/activate
 # you can set environment variables in the job script
-export HPC_DIR=$HOME/Demos/HPC_IPMU
+export HPC_DIR=/lustre/work/tutorial/HPC_IPMU
 cd $HPC_DIR/Code/Serial
 # run program
 python Serial_Example.py
