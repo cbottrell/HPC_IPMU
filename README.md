@@ -233,20 +233,20 @@ Then use `rsh` to connect to it
 
 Using jupyter is a great way to make working remotely a little easier and more seamless.
 
-You should always run jupyter in a job. Make a job script which runs the command
+You should always run jupyter in a job. Make a job script which runs the command 
 
 ```bash
 jupyter lab --no-browser --ip=0.0.0.0 --port=X
 ```
 
-where X is some port you choose, e.g 1337.
+where X is some port you choose, e.g 1337. Each port can only be used by one application at a time so make sure your jupyter session chooses a unique port number.
 
-Now you just need to forward some port Y on your local computer to the remote port X. On gpgpu, this is as simple as running 
+Now you just need to forward some port Y on your local computer to the remote port X. On gpgpu, this is as simple as running
 
 ```bash
 $ ssh -NfL Y:localhost:X username@192.168.156.71 #for gpgpu
 ```
-Now opening your browser to localhost:Y will give you direct access to jupyter on the cluster.
+Now opening your browser to localhost:Y will give you direct access to jupyter on gpgpu. This same kind of port forwarding is used if you want to use MLFlow or tensorboard to track your ML experiments. 
 
 On idark, you first need to find node your jupyter is running on by running `qstat -nrt -u username`.
 
@@ -254,9 +254,8 @@ Then on your local computer just run
 ```bash
 $ ssh -NfL Y:ansysNN:X username@idark.ipmu.jp #for idark
 ```
-where ansysNN is the node name. You'll now be able to access jupyter by pointing your browser to localhost:Y .
+where ansysNN is the node name. You'll now be able to access jupyter by pointing your browser to localhost:Y . The first time you connect to a jupyter session, it may prompt you for a connection token. You can get the token by connecting to the compute node using `rsh ansysNN` from the head node, and then running `jupyter server list`. You can use that token on the connection page to set a jupyter password which you can use to connect to future jupyter sessions on any node.
 
-This same kind of port forwarding is used if you want to use MLFlow or tensorboard to track your ML experiments.
 
 <!-- On gpgpu, to give GPUs to your jupyter instance you should put the jupyter lab command in a job script. -->
 
