@@ -79,25 +79,25 @@ To deactivate a conda environment, just run `conda deactivate`.
 You can also create your own environments with conda with any specified python version:
 
 ```bash
-[username@idark ~]$ conda create -n tf39_cpu python=3.9
+[username@idark ~]$ conda create -n project-env python=3.9
 ```
 
-This command creates a new python environment called `tf39_cpu` which runs the latest stable version of Python 3.9. Once you have created the new environment, you can view it and all other existing environments (including `base`) with `conda env list`. You can activate any of these environments as follows:
+This command creates a new python environment called `project-env` which runs the latest stable version of Python 3.9. Once you have created the new environment, you can view it and all other existing environments (including `base`) with `conda env list`. You can activate any of these environments as follows:
 ```bash
-[username@idark ~]$ conda activate tf39_cpu
+[username@idark ~]$ conda activate project-env
 ``` 
-replacing `tf39_cpu` with the name of your environment. 
+replacing `project-env` with the name of your environment. 
 
 The default installation will be fairly bare-bones, but you can now start installing packages. To install numpy, for example, you can do:
 ```bash
-(tf39_cpu) [username@idark ~]$ conda install numpy
+(project-env) [username@idark ~]$ conda install numpy
 ```
 
 If a package you want is unavailable from the conda package manager, you can use `pip` within a conda environment instead. Type `which pip` and you will see that it is a specific pip installation for your python environment. Note, however, that this can sometimes lead to conflicts; see [here](https://www.anaconda.com/blog/using-pip-in-a-conda-environment) for details. 
 
 `numpy` is one of many useful Python packages. Wouldn't it be nice if there is a stack of all the useful scientific packages so that you wouldn't have to install them all separately and think about dependencies? Oh yeah:
 ```bash
-(tf39_cpu) [username@idark ~]$ pip install scipy-stack
+(project-env) [username@idark ~]$ pip install scipy-stack
 ```
 
 Later, we will see how to use this python environment for jobs. For more documentation on conda, including more management options and deletion of environments, check out the [conda docs](https://conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html).
@@ -178,7 +178,7 @@ The basic pattern for a PBS job on idark is
 
 # activate python environment
 source ~/.bashrc 
-conda activate tf39_cpu
+conda activate project-env
 # for pyenv/virtualenv instead use
 # source /home/username/project/project-venv/bin/activate
 
@@ -204,7 +204,7 @@ export CUDA_DEVICE_ORDER=PCI_BUS_ID
 export CUDA_VISIBLE_DEVICES=X # where X is the GPU id of an available GPU
 
 # activate python environment
-conda activate tf39_cpu
+conda activate project-env
 # for pyenv/virtualenv instead use
 # source /home/username/project/project-venv/bin/activate
 
@@ -213,30 +213,60 @@ python my_program.py
 
 Please use only one GPU at a time, to prevent congestion.
 
-## Using Jupyter 
+## Accessing the compute nodes
 
-Using jupyter is a great way to make working remotely a little easier and more seamless. On idark, I believe it is only possible to run jupyter on the login node. Run
+On idark, you can directly access the compute node that is running your job. First identify the node by running
+
+``` bash
+[username@idark] $ qstat -nrt -u username
+```
+The node will have a name of the format `ansysNN` where `NN` in a 2-digit number between 01 and 40. 
+
+Then use `rsh` to connect to it
+
+```bash
+[username@idark ~]$ rsh ansysNN
+[username@ansysNN ~]$
+```
+
+## Using Jupyter and port forwarding
+
+Using jupyter is a great way to make working remotely a little easier and more seamless.
+
+You should always run jupyter in a job. Make a job script which runs the command
 
 ```bash
 jupyter lab --no-browser --ip=0.0.0.0 --port=X
 ```
 
-where X is some port you choose, e.g 1337. Then on your local computer forward some local port Y to the remote port X using
+where X is some port you choose, e.g 1337.
+
+Now you just need to forward some port Y on your local computer to the remote port X. On gpgpu, this is as simple as running 
 
 ```bash
-$ ssh -NfL Y:localhost:X username@idark.ipmu.jp
+$ ssh -NfL Y:localhost:X username@192.168.156.71 #for gpgpu
 ```
-Now opening your browser to localhost:Y will give you direct access to jupyter on the cluster. This same kind of port forwarding is used if you want to use MLFlow or tensorboard to track your ML experiments.
+Now opening your browser to localhost:Y will give you direct access to jupyter on the cluster.
 
-On gpgpu, to give GPUs to your jupyter instance you should put the jupyter lab command in a job script.
+On idark, you first need to find node your jupyter is running on by running `qstat -nrt -u username`.
+
+Then on your local computer just run
+```bash
+$ ssh -NfL Y:ansysNN:X username@idark.ipmu.jp #for idark
+```
+where ansysNN is the node name. You'll now be able to access jupyter by pointing your browser to localhost:Y .
+
+This same kind of port forwarding is used if you want to use MLFlow or tensorboard to track your ML experiments.
+
+<!-- On gpgpu, to give GPUs to your jupyter instance you should put the jupyter lab command in a job script. -->
 
 <!-- If you get an ssl error running jupyter lab, then either make sure you activate conda in your job script or if using pyenv find the missing libraries mentioned in the error message using `locate libssl.so.1.1`, copy library from the login node to a folder `/home/username/mylibs/`, and and then in your job script add the line `export LD_LIBRARY_PATH=/home/username/mylibs/:$LD_LIBRARY_PATH` .  -->
 
-To register a virtualenv in jupyter, run
+To register a python environment with jupyter, just activate the environment and then run
 ```bash
-source project-venv/bin/activate 
 python -m ipykernel install --name project-venv --user
 ```
+and you'll see a kernel with name project-venv next time you launch jupyter.
 
 ## Connecting your IDE 
 
